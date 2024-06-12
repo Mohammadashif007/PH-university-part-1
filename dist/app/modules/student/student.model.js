@@ -40,4 +40,4 @@ const studentSchema = new mongoose_1.Schema({
     profileImage: { type: String },
     isActive: { type: String, enum: ['active', 'block'] },
 });
-exports.StudentModel = (0, mongoose_1.model)("student", studentSchema);
+exports.StudentModel = (0, mongoose_1.model)("Student", studentSchema);

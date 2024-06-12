@@ -9,12 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StudentController = void 0;
+exports.StudentControllers = void 0;
 const student_service_1 = require("./student.service");
 const createStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { students } = req.body;
-        const result = yield student_service_1.StudentServices.createStudentIntoDB(students);
+        const { students: studentData } = req.body;
+        const result = yield student_service_1.StudentServices.createStudentIntoDB(studentData);
         res.status(200).json({
             success: true,
             message: 'Student created successfully',
@@ -27,11 +27,11 @@ const createStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 const getAllStudents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield student_service_1.StudentServices.getAllStudentFromDB();
+        const result = yield student_service_1.StudentServices.getAllStudentsFromDB();
         res.status(200).json({
             success: true,
-            message: 'Students data retrieve successfully',
-            data: result,
+            message: "Students retrieve successfully",
+            data: result
         });
     }
     catch (error) {
@@ -41,19 +41,19 @@ const getAllStudents = (req, res) => __awaiter(void 0, void 0, void 0, function*
 const getSingleStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { studentId } = req.params;
-        const result = yield student_service_1.StudentServices.getStudentById(studentId);
+        const result = yield student_service_1.StudentServices.getSingleStudentFromDB(studentId);
         res.status(200).json({
             success: true,
-            message: 'Single student retrieve successfully',
-            data: result,
+            message: "Single student retrieve successfully",
+            data: result
         });
     }
     catch (error) {
         console.log(error);
     }
 });
-exports.StudentController = {
+exports.StudentControllers = {
     createStudent,
     getAllStudents,
-    getSingleStudent,
+    getSingleStudent
 };
