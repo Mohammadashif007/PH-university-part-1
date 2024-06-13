@@ -8,13 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StudentControllers = void 0;
 const student_service_1 = require("./student.service");
+const student_validation_1 = __importDefault(require("./student.validation"));
 const createStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { students: studentData } = req.body;
-        const result = yield student_service_1.StudentServices.createStudentIntoDB(studentData);
+        // ! zod validated data
+        const validatedData = student_validation_1.default.parse(studentData);
+        const result = yield student_service_1.StudentServices.createStudentIntoDB(validatedData);
         res.status(200).json({
             success: true,
             message: 'Student created successfully',
@@ -22,7 +28,11 @@ const createStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         });
     }
     catch (error) {
-        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Something went wrong!',
+            error: error,
+        });
     }
 });
 const getAllStudents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

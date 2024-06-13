@@ -1,6 +1,15 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.StudentModel = void 0;
+exports.Student = void 0;
 const mongoose_1 = require("mongoose");
 const userNameSchema = new mongoose_1.Schema({
     firstName: { type: String, required: true },
@@ -36,8 +45,17 @@ const studentSchema = new mongoose_1.Schema({
     },
     presentAddress: { type: String, required: true },
     permanentAddress: { type: String, required: true },
-    localGuardian: localGuardianSchema,
+    localGuardian: {
+        type: localGuardianSchema,
+        required: true,
+    },
     profileImage: { type: String },
-    isActive: { type: String, enum: ['active', 'block'] },
+    isActive: { type: String, enum: ['active', 'block'], default: 'active' },
 });
-exports.StudentModel = (0, mongoose_1.model)("Student", studentSchema);
+studentSchema.methods.isUserExists = function (id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const existingUser = yield exports.Student.findOne({ id });
+        return existingUser;
+    });
+};
+exports.Student = (0, mongoose_1.model)('Student', studentSchema);

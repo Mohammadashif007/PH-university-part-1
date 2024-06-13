@@ -11,20 +11,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StudentServices = void 0;
 const student_model_1 = require("./student.model");
-const createStudentIntoDB = (student) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield student_model_1.StudentModel.create(student);
+const createStudentIntoDB = (studentData) => __awaiter(void 0, void 0, void 0, function* () {
+    // ! build in static method
+    // const result = await StudentModel.create(studentData);
+    // return result;
+    // ! build in instance method
+    const student = new student_model_1.Student(studentData);
+    if (yield student.isUserExists(studentData.id)) {
+        throw new Error('User already exists!');
+    }
+    const result = student.save();
     return result;
 });
 const getAllStudentsFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield student_model_1.StudentModel.find();
+    const result = yield student_model_1.Student.find();
     return result;
 });
 const getSingleStudentFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield student_model_1.StudentModel.findOne({ id });
+    const result = yield student_model_1.Student.findOne({ id });
     return result;
 });
 exports.StudentServices = {
     createStudentIntoDB,
     getAllStudentsFromDB,
-    getSingleStudentFromDB
+    getSingleStudentFromDB,
 };

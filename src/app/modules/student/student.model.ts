@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 import {
+  StudentMethods,
+  StudentModel,
   TGuardian,
   TLocalGuardian,
   TStudent,
@@ -28,10 +30,11 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
   address: { type: String, required: true },
 });
 
-const studentSchema = new Schema<TStudent>({
+const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>({
   id: { type: String, required: true },
   name: userNameSchema,
   guardian: guardianSchema,
+
   dateOfBirth: { type: String, required: true },
   gender: { type: String, enum: ['Male', 'Female'], required: true },
   email: { type: String, required: true },
@@ -43,10 +46,18 @@ const studentSchema = new Schema<TStudent>({
   },
   presentAddress: { type: String, required: true },
   permanentAddress: { type: String, required: true },
-  localGuardian: localGuardianSchema,
+  localGuardian: {
+    type: localGuardianSchema,
+    required: true,
+  },
   profileImage: { type: String },
-  isActive: { type: String, enum: ['active', 'block'] },
+  isActive: { type: String, enum: ['active', 'block'], default: 'active' },
 });
 
+studentSchema.methods.isUserExists = async function(id: string){
+    const existingUser = await Student.findOne({id})
+    return existingUser
+}
 
-export const StudentModel = model<TStudent>("Student", studentSchema) 
+export const Student = model<TStudent, StudentModel>('Student', studentSchema);
+
